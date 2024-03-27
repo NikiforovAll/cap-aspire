@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Azure.Messaging.ServiceBus" Version="9.0.0-preview.2.24162.2" />
+    <PackageReference Include="DotNetCore.Cap" Version="8.1.0" />
+    <PackageReference Include="DotNetCore.Cap.AzureServiceBus" Version="8.1.0" />
+    <PackageReference Include="DotNetCore.Cap.InMemoryStorage" Version="8.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CapExample.ServiceDefaults\CapExample.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>
