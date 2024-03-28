@@ -11,7 +11,6 @@
     <PackageReference Include="Aspire.Microsoft.Data.SqlClient" Version="9.0.0-preview.2.24162.2" />
     <PackageReference Include="DotNetCore.Cap" Version="8.1.0" />
     <PackageReference Include="DotNetCore.Cap.AzureServiceBus" Version="8.1.0" />
-    <PackageReference Include="DotNetCore.Cap.InMemoryStorage" Version="8.1.0" />
     <PackageReference Include="DotNetCore.CAP.SqlServer" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />

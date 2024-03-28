@@ -13,10 +13,11 @@ builder.Services.AddSingleton<SampleSubscriber>();
 
 builder.Services.AddCap(x =>
 {
+    var dbConnectionString = builder.Configuration.GetConnectionString("sqldb")!;
     var serviceBusConnection = builder.Configuration.GetConnectionString("serviceBus")!;
 
-    x.UseInMemoryStorage();
     x.UseAzureServiceBus(serviceBusConnection);
+    x.UseSqlServer(x => x.ConnectionString = dbConnectionString);
 });
 
 var app = builder.Build();
@@ -32,7 +33,8 @@ app.MapDefaultEndpoints();
 
 app.Run();
 
-public class SampleSubscriber(TimeProvider timeProvider, ILogger<SampleSubscriber> logger) : ICapSubscribe
+public class SampleSubscriber(
+    TimeProvider timeProvider, ILogger<SampleSubscriber> logger) : ICapSubscribe
 {
     public record MyMessage(string CreatedAt);
     

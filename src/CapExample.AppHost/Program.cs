@@ -9,6 +9,7 @@ var serviceBus = builder.ExecutionContext.IsPublishMode
     : builder.AddConnectionString("serviceBus");
 
 builder.AddProject<Projects.Consumer>("consumer")
+    .WithReference(sqlServer)
     .WithReference(serviceBus);
 
 builder.AddProject<Projects.Producer>("producer")
