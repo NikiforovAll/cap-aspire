@@ -1,11 +1,12 @@
+using System.Data;
 using DotNetCore.CAP;
-using Npgsql;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.AddAzureServiceBus("serviceBus");
-builder.AddNpgsqlDataSource("postgresdb_producer");
+builder.AddSqlServerClient("sqldb");
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -13,11 +14,11 @@ builder.Services.AddProblemDetails();
 
 builder.Services.AddCap(x =>
 {
-    var postgresConnection = builder.Configuration.GetConnectionString("postgresdb_producer")!;
+    var dbConnectionString = builder.Configuration.GetConnectionString("sqldb")!;
     var serviceBusConnection = builder.Configuration.GetConnectionString("serviceBus")!;
 
     x.UseAzureServiceBus(serviceBusConnection);
-    x.UsePostgreSql(x => x.DataSource = NpgsqlDataSource.Create(postgresConnection));
+    x.UseSqlServer(x => x.ConnectionString = dbConnectionString);
 });
 
 var app = builder.Build();
@@ -32,22 +33,24 @@ app.UseHttpsRedirection();
 
 app.UseExceptionHandler();
 
-app.MapPost("/send", async (NpgsqlDataSource dataSource, ICapPublisher capPublisher, TimeProvider timeProvider) =>
+app.MapGet("/send", async (SqlConnection connection, ICapPublisher capPublisher, TimeProvider timeProvider) =>
 {
-    using var connection = dataSource.OpenConnection();
+    var startTime = timeProvider.GetTimestamp();
     using var transaction = connection.BeginTransaction(capPublisher, autoCommit: false);
 
     var command = connection.CreateCommand();
-    command.Transaction = (NpgsqlTransaction)transaction.DbTransaction!;
-    command.CommandText = "SELECT NOW()";
+    command.Transaction = (SqlTransaction)transaction;
+    command.CommandText = "SELECT GETDATE()";
     var serverTime = await command.ExecuteScalarAsync();
 
     await capPublisher.PublishDelayAsync(
         TimeSpan.FromMilliseconds(500),
         "test.show.time",
-        new MyMessage(serverTime.ToString()));
+        new MyMessage(serverTime?.ToString()!));
 
     transaction.Commit();
+
+    return TypedResults.Ok(new { Status = "Published", Duration = timeProvider.GetElapsedTime(startTime) });
 });
 
 app.MapDefaultEndpoints();

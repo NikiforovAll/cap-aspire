@@ -17,10 +17,10 @@ properties:
     - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
       identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
     secrets:
-      - name: connectionstrings--postgresdb
-        value: Host=pg;Port=5432;Username=postgres;Password={{ index .Inputs `pg` `password` }};Database=postgresdb
       - name: connectionstrings--servicebus
         value: '{{ .Env.SERVICEBUS_SERVICEBUSENDPOINT }}'
+      - name: connectionstrings--sqldb
+        value: Server=tcp:{{ .Env.SQLSERVER_SQLSERVERFQDN }},1433;Encrypt=True;Authentication="Active Directory Default";Database=sqldb
   template:
     containers:
     - image: {{ .Image }}
@@ -32,10 +32,10 @@ properties:
         value: "true"
       - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES
         value: "true"
-      - name: ConnectionStrings__postgresdb
-        secretRef: connectionstrings--postgresdb
       - name: ConnectionStrings__serviceBus
         secretRef: connectionstrings--servicebus
+      - name: ConnectionStrings__sqldb
+        secretRef: connectionstrings--sqldb
     scale:
       minReplicas: 1
 tags:

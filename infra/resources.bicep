@@ -3,8 +3,6 @@ param location string = resourceGroup().location
 
 @description('Tags that will be applied to all resources')
 param tags object = {}
-@secure()
-param inputs object
 
 
 var resourceToken = uniqueString(resourceGroup().id)
@@ -61,54 +59,6 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' 
     }
   }
   tags: tags
-}
-
-resource pg 'Microsoft.App/containerApps@2023-05-02-preview' = {
-  name: 'pg'
-  location: location
-  properties: {
-    environmentId: containerAppEnvironment.id
-    configuration: {
-      activeRevisionsMode: 'Single'
-      ingress: {
-        external: true
-        targetPort: 5432
-        transport: 'tcp'
-      }
-      secrets: [
-        {
-          name: 'postgres-password'
-          value: inputs.pg.password
-        }    
-      ]
-    }
-    template: {
-      containers: [
-        {
-          image: 'postgres:16.2'
-          name: 'pg'
-          env: [
-            {
-              name: 'POSTGRES_HOST_AUTH_METHOD'
-              value: 'scram-sha-256'
-            }
-            {
-              name: 'POSTGRES_INITDB_ARGS'
-              value: '--auth-host=scram-sha-256 --auth-local=scram-sha-256'
-            }
-            {
-              name: 'POSTGRES_PASSWORD'
-              secretRef: 'postgres-password'
-            }
-          ]
-        }
-      ]
-      scale: {
-        minReplicas: 1
-      }
-    }
-  }
-  tags: union(tags, {'aspire-resource-name': 'pg'})
 }
 
 output MANAGED_IDENTITY_CLIENT_ID string = managedIdentity.properties.clientId

@@ -1,0 +1,35 @@
+{
+    "name": "Azure Developer CLI",
+    "image": "mcr.microsoft.com/devcontainers/python:3.10-bullseye",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+        },
+        "ghcr.io/azure/azure-dev/azd:latest": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "GitHub.vscode-github-actions",
+                "ms-azuretools.azure-dev",
+                "ms-azuretools.vscode-azurefunctions",
+                "ms-azuretools.vscode-bicep",
+                "ms-azuretools.vscode-docker",
+                "GitHub.copilot-chat",
+                "GitHub.copilot",
+                "Codium.codium",
+                "ms-dotnettools.csdevkit",
+                "ms-dotnettools.csharp",
+                "ms-dotnettools.vscodeintellicode-csharp",
+                "eamodio.gitlens"
+            ]
+        }
+    },
+    "forwardPorts": [
+        // Forward ports if needed for local development
+    ],
+    "postCreateCommand": "",
+    "remoteUser": "vscode",
+    "hostRequirements": {
+        "memory": "8gb"
+    }
+}

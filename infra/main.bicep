@@ -8,12 +8,11 @@ param environmentName string
 @minLength(1)
 @description('The location used for all deployed resources')
 param location string
-
 @secure()
 @metadata({azd: {
   type: 'inputs'
   autoGenerate: {
-    pg: {
+    sql: {
       password: { len: 10 }
     }
   }}
@@ -37,7 +36,6 @@ module resources 'resources.bicep' = {
   params: {
     location: location
     tags: tags
-    inputs: inputs
   }
 }
 
@@ -53,6 +51,18 @@ module serviceBus 'serviceBus/aspire.hosting.azure.bicep.servicebus.bicep' = {
     topics: []
   }
 }
+module sqlserver 'sqlserver/aspire.hosting.azure.bicep.sql.bicep' = {
+  name: 'sqlserver'
+  scope: rg
+  params: {
+    location: location
+    databases: ['sqldb']
+    principalId: resources.outputs.MANAGED_IDENTITY_PRINCIPAL_ID
+    principalName: resources.outputs.MANAGED_IDENTITY_NAME
+    serverName: 'sqlserver'
+    inputs: inputs
+  }
+}
 output MANAGED_IDENTITY_CLIENT_ID string = resources.outputs.MANAGED_IDENTITY_CLIENT_ID
 output MANAGED_IDENTITY_NAME string = resources.outputs.MANAGED_IDENTITY_NAME
 output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = resources.outputs.AZURE_LOG_ANALYTICS_WORKSPACE_NAME
@@ -62,3 +72,4 @@ output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = resources.outputs.AZURE_CONT
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN
 
 output SERVICEBUS_SERVICEBUSENDPOINT string = serviceBus.outputs.serviceBusEndpoint
+output SQLSERVER_SQLSERVERFQDN string = sqlserver.outputs.sqlServerFqdn

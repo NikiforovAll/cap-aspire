@@ -15,6 +15,7 @@ builder.Services.AddCap(x =>
 {
     var serviceBusConnection = builder.Configuration.GetConnectionString("serviceBus")!;
 
+    x.UseInMemoryStorage();
     x.UseAzureServiceBus(serviceBusConnection);
 });
 
@@ -31,13 +32,15 @@ app.MapDefaultEndpoints();
 
 app.Run();
 
-public class SampleSubscriber : ICapSubscribe
+public class SampleSubscriber(TimeProvider timeProvider, ILogger<SampleSubscriber> logger) : ICapSubscribe
 {
     public record MyMessage(string CreatedAt);
     
     [CapSubscribe("test.show.time")]
-    public void Handle(MyMessage message)
+    public async Task HandleAsync(MyMessage message)
     {
-        Console.WriteLine($"Message {message.CreatedAt} received");
+        await Task.Delay(TimeSpan.FromMilliseconds(300), timeProvider);
+        
+        logger.LogInformation("Message received: {CreatedAt}", message.CreatedAt);
     }
 }
