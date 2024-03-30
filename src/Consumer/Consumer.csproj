@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Microsoft.Data.SqlClient" Version="9.0.0-preview.2.24162.2" />
     <PackageReference Include="Aspire.Azure.Messaging.ServiceBus" Version="9.0.0-preview.2.24162.2" />
     <PackageReference Include="DotNetCore.Cap" Version="8.1.0" />
     <PackageReference Include="DotNetCore.Cap.AzureServiceBus" Version="8.1.0" />

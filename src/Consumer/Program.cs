@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.AddAzureServiceBus("serviceBus");
+builder.AddSqlServerClient("sqldb");
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

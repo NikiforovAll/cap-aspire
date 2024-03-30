@@ -1,5 +1,8 @@
 # DotNetCore.CAP + Aspire [![.NET](https://github.com/NikiforovAll/cap-aspire/actions/workflows/dotnet.yml/badge.svg)](https://github.com/NikiforovAll/cap-aspire/actions/workflows/dotnet.yml)
 
+
+See the blog post: <https://nikiforovall.github.io/dotnet/aspnetcore/aspire/2024/03/30/aspire-cap.html>
+
 Technologies:
 
 * DotNetCore.CAP

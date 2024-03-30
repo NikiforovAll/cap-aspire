@@ -1,4 +1,3 @@
-using System.Data;
 using DotNetCore.CAP;
 using Microsoft.Data.SqlClient;
 
